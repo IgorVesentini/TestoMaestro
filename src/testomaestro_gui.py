@@ -23,8 +23,19 @@ LABEL_BG_COLOR = "#e0e0e0"
 class TestoMaestroGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title(f"{APP_NAME} v.{APP_VERSION}")
 
+        # ===== Icona finestra =====
+        from PIL import Image, ImageTk
+
+        # Carica PNG della tua icona
+        img = Image.open("img/testomaestro.png")  # sostituisci con il percorso corretto
+        tk_img = ImageTk.PhotoImage(img)
+
+        # Imposta come icona della finestra (barra titolo e Alt+Tab)
+        self.root.iconphoto(False, tk_img)
+        self.tk_icon = tk_img  # salva riferimento per Tkinter
+
+        self.root.title(f"{APP_NAME} v.{APP_VERSION}")
 
         # ===== Step 1: sfondo chiaro e dimensione finestra =====
         BG_COLOR = "#f5f5f5"

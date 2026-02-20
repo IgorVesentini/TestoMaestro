@@ -42,13 +42,14 @@ TestoMaestro è pensato per chi ha bisogno di manipolare file di testo complessi
 
 ## Architettura del progetto
 
+
 TestoMaestro/
 ├── src/ # codice sorgente
-│ ├── main.py # punto di ingresso
-│ ├── engine.py # motore di elaborazione (filtri, ordinamenti)
-│ ├── utils.py # funzioni di supporto
-│ ├── gui.py # gestione GUI principale
-│ └── pycache/
+│   ├── main.py # punto di ingresso
+│   ├── engine.py # motore di elaborazione (filtri, ordinamenti)
+│   ├── utils.py # funzioni di supporto
+│   ├── gui.py # gestione GUI principale
+│   └── __pycache__/
 ├── examples/ # esempi di file testuali
 ├── screenshots/ # immagini della GUI
 ├── README.md # questa documentazione

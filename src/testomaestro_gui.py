@@ -23,18 +23,6 @@ LABEL_BG_COLOR = "#e0e0e0"
 class TestoMaestroGUI:
     def __init__(self, root):
         self.root = root
-
-        # ===== Icona finestra =====
-        from PIL import Image, ImageTk
-
-        # Carica PNG della tua icona
-        img = Image.open("img/testomaestro.png")  # sostituisci con il percorso corretto
-        tk_img = ImageTk.PhotoImage(img)
-
-        # Imposta come icona della finestra (barra titolo e Alt+Tab)
-        self.root.iconphoto(False, tk_img)
-        self.tk_icon = tk_img  # salva riferimento per Tkinter
-
         self.root.title(f"{APP_NAME} v.{APP_VERSION}")
 
         # ===== Step 1: sfondo chiaro e dimensione finestra =====
@@ -42,7 +30,7 @@ class TestoMaestroGUI:
         self.root.configure(bg=BG_COLOR)
         self.root.geometry("900x600")
 
-        # Variabili
+        # ===== Variabili principali =====
         self.file_path = tk.StringVar()
         self.last_folder = os.getcwd()
         self.file_type = tk.StringVar(value="fisso")  # default fisso
@@ -58,8 +46,8 @@ class TestoMaestroGUI:
         # Dati colonne CSV (aggiornati al caricamento del file)
         self.csv_columns = []
 
+        # ===== Crea tutti i widget della GUI =====
         self.create_widgets()
-
     def update_filters_dropdown(self):
         if self.file_type.get() != "csv":
             return

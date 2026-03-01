@@ -28,7 +28,21 @@ class TestoMaestroGUI:
         # ===== Step 1: sfondo chiaro e dimensione finestra =====
         BG_COLOR = "#f5f5f5"
         self.root.configure(bg=BG_COLOR)
-        self.root.geometry("900x600")
+
+        # Dimensione finestra
+        win_width = 900
+        win_height = 620
+
+        # Ottieni dimensione schermo
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+
+        # Calcola coordinate per centrare
+        x = (screen_width // 2) - (win_width // 2)
+        y = (screen_height // 2) - (win_height // 2)
+
+        # Imposta geometria centrata
+        self.root.geometry(f"{win_width}x{win_height}+{x}+{y}")
 
         # ===== Variabili principali =====
         self.file_path = tk.StringVar()
@@ -96,8 +110,8 @@ class TestoMaestroGUI:
         # ===== Bottone Info in alto a destra =====
         self.btn_info = ttk.Button(
             self.root,
-            text="Info",
-            width=6,                   # compatto
+            text="?",
+            width=4,                   # compatto
             command=self.show_app_info, # funzione che mostrerà nome, versione, licenza ecc.
             style="My.TButton"
         )
@@ -123,10 +137,19 @@ class TestoMaestroGUI:
         # ===== Anteprima =====
         preview_frame = ttk.LabelFrame(self.root, text="Anteprima (prime 10 righe)", style="My.TLabelframe")
         preview_frame.grid(row=3, column=0, padx=10, pady=5, sticky="nsew")
-    
-        self.preview_text = tk.Text(preview_frame, height=10, width=80, state="disabled", font=FONT_PREVIEW)
-        self.preview_text.grid(row=0, column=0, padx=5, pady=5)
-    
+
+        self.preview_text = tk.Text(preview_frame, height=10, width=80, state="normal", font=FONT_PREVIEW, wrap="none")
+        self.preview_text.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
+
+        # Scrollbar orizzontale chirurgica
+        x_scroll = ttk.Scrollbar(preview_frame, orient="horizontal", command=self.preview_text.xview)
+        self.preview_text.configure(xscrollcommand=x_scroll.set)
+        x_scroll.grid(row=0, column=0, sticky="swe", padx=5, pady=5)
+
+        # Assicura che il Text cresca con il frame
+        preview_frame.grid_rowconfigure(0, weight=1)
+        preview_frame.grid_columnconfigure(0, weight=1)
+
         # ===== Pulsanti =====
         self.btn_execute = ttk.Button(self.root, text="Esegui", command=self.execute, style="My.TButton")
         self.btn_execute.grid(row=4, column=0, padx=10, pady=5, sticky="ew")
@@ -846,8 +869,16 @@ class TestoMaestroGUI:
             ttk.Label(self.sort_frame, text="Ordinamento", style="My.TLabel").grid(row=0, column=2, padx=5, pady=2)
 
     def show_app_info(self):
-        info_text = f"{APP_NAME} v.{APP_VERSION}\n© {APP_YEAR} {APP_AUTHOR}\nLicenza: {APP_LICENSE}"
-        messagebox.showinfo("Informazioni App", info_text)
+        # Testo del popup con spaziatura più accogliente
+        info_text = (
+            f"\n"
+            f"{APP_NAME}  v.{APP_VERSION}\n\n"
+            f"© {APP_YEAR}  {APP_AUTHOR}\n"
+            f"Licenza: {APP_LICENSE}\n"
+        )
+
+        # Mostra popup info standard Tkinter, centrato sulla finestra principale
+        messagebox.showinfo("Informazioni App", info_text, parent=self.root)
 
 if __name__ == "__main__":
     root = tk.Tk()

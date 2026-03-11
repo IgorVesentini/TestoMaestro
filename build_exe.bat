@@ -1,0 +1,5 @@
+pyinstaller --clean --onefile --windowed ^
+--icon=img/testomaestro.ico ^
+--name TestoMaestro ^
+--hidden-import=tkinterdnd2 ^
+src/testomaestro_gui.py

@@ -4,6 +4,7 @@
 
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
+from tkinterdnd2 import DND_FILES, TkinterDnD
 import os
 import pandas as pd
 from datetime import datetime
@@ -24,6 +25,9 @@ class TestoMaestroGUI:
     def __init__(self, root):
         self.root = root
         self.root.title(f"{APP_NAME} v.{APP_VERSION}")
+        # Abilita drag & drop file
+        self.root.drop_target_register(DND_FILES)
+        self.root.dnd_bind("<<Drop>>", self.drop_file)
 
         # ===== Step 1: sfondo chiaro e dimensione finestra =====
         BG_COLOR = "#f5f5f5"
@@ -92,7 +96,7 @@ class TestoMaestroGUI:
         style.configure("My.TEntry", font=FONT_DEFAULT)
     
         # ===== Selezione file =====
-        file_frame = ttk.LabelFrame(self.root, text="File di input", style="My.TLabelframe")
+        file_frame = ttk.LabelFrame(self.root, text="File di input. Sfoglia o trascina e rilascia il file", style="My.TLabelframe")
         file_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
     
         entry_file = ttk.Entry(
@@ -880,7 +884,15 @@ class TestoMaestroGUI:
         # Mostra popup info standard Tkinter, centrato sulla finestra principale
         messagebox.showinfo("Informazioni App", info_text, parent=self.root)
 
+    def drop_file(self, event):
+        file_path = event.data.strip("{}")  # Windows aggiunge {}
+    
+        if os.path.isfile(file_path):
+            self.file_path.set(file_path)
+            self.last_folder = os.path.dirname(file_path)
+            self.load_file()
+
 if __name__ == "__main__":
-    root = tk.Tk()
+    root = TkinterDnD.Tk()
     app = TestoMaestroGUI(root)
     root.mainloop()

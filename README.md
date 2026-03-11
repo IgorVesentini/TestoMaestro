@@ -16,7 +16,7 @@ TestoMaestro è pensato per chi ha bisogno di manipolare file di testo complessi
 ## Funzionalità principali
 
 ### 1. Caricamento file
-- Selezione file da percorso locale
+- Selezione file da percorso locale o **tramite drag & drop** direttamente nell’area dell'applicazione
 - Supporto per file a larghezza fissa
 - Preview delle prime **n righe** nel widget dedicato
 - GUI reattiva con scroll verticale e orizzontale in base al contenuto del box di anteprima
@@ -58,6 +58,9 @@ TestoMaestro/
 
 - Python gestisce i file **in memoria**, ottimo per file piccoli e medi (<500 MB)
 - GUI leggera, realizzata con **Tkinter**, con layout reattivo per schermi di diverse dimensioni
+- Drag & drop dei file supportato tramite **tkinterdnd2**
+- Per chi desidera ricompilare l’app da sorgente, sono richieste le librerie: `pandas` (gestione CSV), `tkinterdnd2` (drag & drop)
+- L’EXE distribuito è **standalone**, non richiede Python né installazione di librerie aggiuntive
 - Il motore interno (`engine.py`) applica filtri e ordinamenti in modo sequenziale, mantenendo consistenza tra anteprima e output
 
 ## Note future / TODO

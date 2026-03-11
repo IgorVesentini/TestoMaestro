@@ -8,7 +8,7 @@
 from datetime import datetime
 
 APP_NAME    = "TestoMaestro"
-APP_VERSION = "1.3.0"
+APP_VERSION = "1.4.0"
 APP_AUTHOR  = "Igor Vesentini"
 APP_YEAR    = datetime.now().year
 APP_LICENSE = "MIT"

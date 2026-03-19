@@ -142,16 +142,21 @@ class TestoMaestroGUI:
         preview_frame = ttk.LabelFrame(self.root, text="Anteprima (prime 10 righe)", style="My.TLabelframe")
         preview_frame.grid(row=3, column=0, padx=10, pady=5, sticky="nsew")
 
+        # Label per mostrare la posizione della selezione
+        self.lbl_selection_pos = ttk.Label(preview_frame, text="Posizione selezione: -", style="My.TLabel")
+        self.lbl_selection_pos.grid(row=0, column=0, sticky="w", padx=5, pady=(2,0))
+
         self.preview_text = tk.Text(preview_frame, height=10, width=80, state="normal", font=FONT_PREVIEW, wrap="none")
-        self.preview_text.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
+        self.preview_text.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+        self.preview_text.bind("<<Selection>>", self.update_selection_position)
 
         # Scrollbar orizzontale chirurgica
         x_scroll = ttk.Scrollbar(preview_frame, orient="horizontal", command=self.preview_text.xview)
         self.preview_text.configure(xscrollcommand=x_scroll.set)
-        x_scroll.grid(row=0, column=0, sticky="swe", padx=5, pady=5)
+        x_scroll.grid(row=2, column=0, sticky="swe", padx=5, pady=5)
 
         # Assicura che il Text cresca con il frame
-        preview_frame.grid_rowconfigure(0, weight=1)
+        preview_frame.grid_rowconfigure(1, weight=1)
         preview_frame.grid_columnconfigure(0, weight=1)
 
         # ===== Pulsanti =====
@@ -891,6 +896,17 @@ class TestoMaestroGUI:
             self.file_path.set(file_path)
             self.last_folder = os.path.dirname(file_path)
             self.load_file()
+
+    def update_selection_position(self, event=None):
+        try:
+            start = self.preview_text.index(tk.SEL_FIRST)
+            end   = self.preview_text.index(tk.SEL_LAST)
+            line_start, col_start = map(int, start.split("."))
+            line_end, col_end     = map(int, end.split("."))
+            self.lbl_selection_pos.config(text=f"Posizione selezione: Da {col_start+1} A {col_end}")
+        except tk.TclError:
+            # nessuna selezione
+            self.lbl_selection_pos.config(text="Posizione selezione: -")
 
 if __name__ == "__main__":
     root = TkinterDnD.Tk()

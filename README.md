@@ -33,6 +33,7 @@ TestoMaestro è pensato per chi ha bisogno di manipolare file di testo complessi
 
 ### 4. Anteprima
 - Visualizzazione delle prime **n righe** prima e dopo le trasformazioni
+- Evidenza delle colonne selezionate (Da e A) per agevolare l'impostazione dei filtri e degli ordinamenti
 - Evidenziazione delle colonne interessate dai filtri e dagli ordinamenti
 
 ### 5. Output
@@ -65,11 +66,20 @@ TestoMaestro/
 
 ## Note future / TODO
 
+- Mostrare info dimensione file caricato e lunghezza righe
+- Gestione alert se file caricato > <parametro soglia MB>
+- Possibilità di scegliere le righe da estrarre: prime "n" righe o righe dalla "n" alla "n" o multiple scelte (scegliere se applicare queste condizioni sul di input o sul file di output; considerare se questa estrazione è compatibile con i filtri e gli ordinamenti applicati dall'utente)
+- Scelta di poter caricare in anteprima più di 10 (default)
+- Salvataggio in memoria cartella da dove prendere i file (directory preferita)
+- Utilizzo "cython" cone compilatore "python vs c" per migliorare prestazioni
+- Gestione "replace" - sostituzione dati
 - Gestione duplicati (flag o eliminazione)
 - Gestione ordinamenti e filtri per tipologia file CSV
 - Possibilità di salvare **preset di filtri e ordinamenti**
 - Pipeline batch per elaborare **più file in sequenza**
 - Ottimizzazione per file molto grandi (>500 MB) con approccio **chunk + merge**
+- Info/chiarimento visivo per modalità ordinamento (priorità a Maiuscole, Minuscole, caratteri speciali...)
+- Possibilità di aprire su app il file prodotto (se troppo grande aprire solo una parte) o apertura cartella con file prodotto già selezionato
 
 ---
 

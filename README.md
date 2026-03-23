@@ -18,6 +18,7 @@ TestoMaestro è pensato per chi ha bisogno di manipolare file di testo complessi
 ### 1. Caricamento file
 - Selezione file da percorso locale o **tramite drag & drop** direttamente nell’area dell'applicazione
 - Supporto per file a larghezza fissa
+- Evidenza dati del file caricato (lunghezza, dimensione, estensione, righe totali)
 - Preview delle prime **n righe** nel widget dedicato
 - GUI reattiva con scroll verticale e orizzontale in base al contenuto del box di anteprima
 
@@ -66,11 +67,12 @@ TestoMaestro/
 
 ## Note future / TODO
 
-- Mostrare info dimensione file caricato e lunghezza righe
+- Opzione (default = no) di poter sovrascrivere il file di input con il file prodotto
 - Gestione alert se file caricato > <parametro soglia MB>
 - Possibilità di scegliere le righe da estrarre: prime "n" righe o righe dalla "n" alla "n" o multiple scelte (scegliere se applicare queste condizioni sul di input o sul file di output; considerare se questa estrazione è compatibile con i filtri e gli ordinamenti applicati dall'utente)
 - Scelta di poter caricare in anteprima più di 10 (default)
 - Salvataggio in memoria cartella da dove prendere i file (directory preferita)
+- Salvataggio impostazioni personali (filtri e/o ordinamenti)
 - Utilizzo "cython" cone compilatore "python vs c" per migliorare prestazioni
 - Gestione "replace" - sostituzione dati
 - Gestione duplicati (flag o eliminazione)

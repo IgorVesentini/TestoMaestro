@@ -110,7 +110,17 @@ class TestoMaestroGUI:
     
         btn_browse = ttk.Button(file_frame, text="Sfoglia...", command=self.browse_file, style="My.TButton")
         btn_browse.grid(row=0, column=1, padx=5, pady=5)
-    
+
+
+        # ===== Label info file =====
+        self.lbl_file_info = ttk.Label(
+            file_frame,
+            text="Dimensione: - ; Estensione: - ; Lunghezza righe: - ; Righe totali: -",
+            style="My.TLabel",
+            font=FONT_DEFAULT
+        )
+        self.lbl_file_info.grid(row=1, column=0, columnspan=3, sticky="w", padx=5, pady=(2,5))
+
         # ===== Bottone Info in alto a destra =====
         self.btn_info = ttk.Button(
             self.root,
@@ -490,6 +500,7 @@ class TestoMaestroGUI:
             self.file_path.set(filename)
             self.last_folder = os.path.dirname(filename)
             self.load_file()
+            self.update_file_info(filename)
 
     def update_csv_options(self, value):
         # Mostra/nascondi opzioni CSV
@@ -534,6 +545,9 @@ class TestoMaestroGUI:
         # Aggiorna intestazioni ordinamenti per file fisso
         if self.file_type.get() != "csv":
             self.update_sort_labels()
+            
+        if self.file_path.get():  # se c'è già un file selezionato
+            self.update_file_info(self.file_path.get())  # aggiorna la label
 
     def load_file(self):
         path = self.file_path.get()
@@ -896,6 +910,7 @@ class TestoMaestroGUI:
             self.file_path.set(file_path)
             self.last_folder = os.path.dirname(file_path)
             self.load_file()
+            self.update_file_info(file_path)
 
     def update_selection_position(self, event=None):
         try:
@@ -907,6 +922,31 @@ class TestoMaestroGUI:
         except tk.TclError:
             # nessuna selezione
             self.lbl_selection_pos.config(text="Posizione selezione: -")
+
+    def update_file_info(self, path):
+        try:
+            # Dimensione file in MB
+            size_mb = os.path.getsize(path) / (1024*1024)
+            ext = os.path.splitext(path)[1] or "(nessuna)"
+
+            # Conteggio righe e lunghezza massima
+            max_len = 0
+            num_lines = 0
+            with open(path, "r", encoding="utf-8") as f:
+                for i, line in enumerate(f):
+                    line = line.rstrip("\n")
+                    num_lines += 1
+                    if len(line) > max_len:
+                        max_len = len(line)
+
+            # Aggiorna label
+            self.lbl_file_info.config(
+                text=f"Dimensione: {size_mb:.2f} MB ; Estensione: {ext} ; Lunghezza righe: {max_len} ; Righe totali: {num_lines}"
+            )
+        except Exception:
+            self.lbl_file_info.config(
+                text="Dimensione: - ; Estensione: - ; Lunghezza righe: - ; Righe totali: -"
+            )
 
 if __name__ == "__main__":
     root = TkinterDnD.Tk()

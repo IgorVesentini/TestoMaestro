@@ -158,6 +158,9 @@ class TestoMaestroGUI:
 
         self.preview_text = tk.Text(preview_frame, height=10, width=80, state="normal", font=FONT_PREVIEW, wrap="none")
         self.preview_text.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+        y_scroll = ttk.Scrollbar(preview_frame, orient="vertical", command=self.preview_text.yview)
+        self.preview_text.configure(yscrollcommand=y_scroll.set)
+        y_scroll.grid(row=1, column=1, sticky="ns", pady=5)
         self.preview_text.bind("<<Selection>>", self.update_selection_position)
 
         # Scrollbar orizzontale chirurgica
@@ -168,6 +171,7 @@ class TestoMaestroGUI:
         # Assicura che il Text cresca con il frame
         preview_frame.grid_rowconfigure(1, weight=1)
         preview_frame.grid_columnconfigure(0, weight=1)
+        preview_frame.grid_columnconfigure(1, weight=0)
 
         # ===== Pulsanti =====
         self.btn_execute = ttk.Button(self.root, text="Esegui", command=self.execute, style="My.TButton")

@@ -12,3 +12,6 @@ APP_VERSION = "1.6.0"
 APP_AUTHOR  = "Igor Vesentini"
 APP_YEAR    = datetime.now().year
 APP_LICENSE = "MIT"
+
+PREVIEW_ROWS_DEFAULT = 50   # default
+PREVIEW_ROWS_MAX     = 500  # massimo consentito

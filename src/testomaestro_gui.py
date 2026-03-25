@@ -8,7 +8,7 @@ from tkinterdnd2 import DND_FILES, TkinterDnD
 import os
 import pandas as pd
 from datetime import datetime
-from info_app import APP_NAME, APP_VERSION, APP_AUTHOR, APP_YEAR, APP_LICENSE
+from info_app import APP_NAME, APP_VERSION, APP_AUTHOR, APP_YEAR, APP_LICENSE, PREVIEW_ROWS_DEFAULT, PREVIEW_ROWS_MAX
 
 # ===== Theme e font moderni =====
 BG_COLOR = "#f5f5f5"            # Sfondo finestra
@@ -63,9 +63,12 @@ class TestoMaestroGUI:
 
         # Dati colonne CSV (aggiornati al caricamento del file)
         self.csv_columns = []
+        self.preview_rows = PREVIEW_ROWS_DEFAULT
+        self.preview_rows_var = tk.IntVar(value=self.preview_rows)
 
         # ===== Crea tutti i widget della GUI =====
         self.create_widgets()
+
     def update_filters_dropdown(self):
         if self.file_type.get() != "csv":
             return
@@ -125,13 +128,12 @@ class TestoMaestroGUI:
         self.btn_info = ttk.Button(
             self.root,
             text="?",
-            width=4,                   # compatto
-            command=self.show_app_info, # funzione che mostrerà nome, versione, licenza ecc.
+            width=4,
+            command=self.show_app_info,
             style="My.TButton"
         )
-        # posizionato sopra tutto, ancorato in alto a destra
         self.btn_info.place(relx=1.0, x=-10, y=10, anchor="ne")   
-        
+    
         # ===== Filtri =====
         self.filter_frame = ttk.LabelFrame(self.root, text="Filtri (multi)", style="My.TLabelframe")
         self.filter_frame.grid(row=1, column=0, padx=10, pady=5, sticky="ew")
@@ -149,30 +151,53 @@ class TestoMaestroGUI:
         btn_add_sort.grid(row=99, column=0, columnspan=3, pady=5, sticky="w")
     
         # ===== Anteprima =====
-        preview_frame = ttk.LabelFrame(self.root, text="Anteprima (prime 10 righe)", style="My.TLabelframe")
+        preview_frame = ttk.LabelFrame(self.root, text="Anteprima", style="My.TLabelframe")
         preview_frame.grid(row=3, column=0, padx=10, pady=5, sticky="nsew")
-
-        # Label per mostrare la posizione della selezione
+    
+        # Label posizione selezione
         self.lbl_selection_pos = ttk.Label(preview_frame, text="Posizione selezione: -", style="My.TLabel")
         self.lbl_selection_pos.grid(row=0, column=0, sticky="w", padx=5, pady=(2,0))
 
+        # Label + Spinbox righe anteprima
+        self.spin_label = ttk.Label(
+            preview_frame, 
+            text=f"Anteprima (prime {self.preview_rows} righe):",
+            style="My.TLabel"
+        )
+        self.spin_label.grid(row=0, column=1, sticky="w", padx=5, pady=(2,0))
+
+        spin_preview = tk.Spinbox(
+            preview_frame,
+            from_=1,
+            to=PREVIEW_ROWS_MAX,
+            textvariable=self.preview_rows_var,
+            width=5,
+            command=self.update_preview_rows
+        )
+        spin_preview.grid(row=0, column=2, sticky="w", padx=(10,5), pady=(2,0))
+        spin_preview.bind("<FocusOut>", lambda event: self.update_preview_rows())
+    
+        # Text widget anteprima
         self.preview_text = tk.Text(preview_frame, height=10, width=80, state="normal", font=FONT_PREVIEW, wrap="none")
-        self.preview_text.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+        self.preview_text.bind("<ButtonRelease-1>", self.update_selection_position)
+        self.preview_text.bind("<KeyRelease>", self.update_selection_position)
+        self.preview_text.grid(row=1, column=0, columnspan=3, sticky="nsew", padx=5, pady=5)
+    
+        # Scrollbar verticale
         y_scroll = ttk.Scrollbar(preview_frame, orient="vertical", command=self.preview_text.yview)
         self.preview_text.configure(yscrollcommand=y_scroll.set)
-        y_scroll.grid(row=1, column=1, sticky="ns", pady=5)
-        self.preview_text.bind("<<Selection>>", self.update_selection_position)
-
-        # Scrollbar orizzontale chirurgica
+        y_scroll.grid(row=1, column=3, sticky="ns", pady=5)
+    
+        # Scrollbar orizzontale
         x_scroll = ttk.Scrollbar(preview_frame, orient="horizontal", command=self.preview_text.xview)
         self.preview_text.configure(xscrollcommand=x_scroll.set)
-        x_scroll.grid(row=2, column=0, sticky="swe", padx=5, pady=5)
-
+        x_scroll.grid(row=2, column=0, columnspan=3, sticky="swe", padx=5, pady=5)
+    
         # Assicura che il Text cresca con il frame
         preview_frame.grid_rowconfigure(1, weight=1)
         preview_frame.grid_columnconfigure(0, weight=1)
         preview_frame.grid_columnconfigure(1, weight=0)
-
+    
         # ===== Pulsanti =====
         self.btn_execute = ttk.Button(self.root, text="Esegui", command=self.execute, style="My.TButton")
         self.btn_execute.grid(row=4, column=0, padx=10, pady=5, sticky="ew")
@@ -582,7 +607,7 @@ class TestoMaestroGUI:
                 except Exception:
                     # Fallback: mostra file raw
                     with open(path, "r", encoding="utf-8") as f:
-                        lines = [f.readline().rstrip("\n") for _ in range(10)]
+                        lines = [f.readline().rstrip("\n") for _ in range(self.preview_rows)]
                     preview = "\n".join(lines)
                     self.preview_text.config(state="normal")
                     self.preview_text.delete(1.0, tk.END)
@@ -590,7 +615,7 @@ class TestoMaestroGUI:
                     self.preview_text.config(state="disabled")
             else:
                 with open(path, "r", encoding="utf-8") as f:
-                    lines = [f.readline().rstrip("\n") for _ in range(10)]
+                    lines = [f.readline().rstrip("\n") for _ in range(self.preview_rows)]
                 preview = "\n".join(lines)
                 self.preview_text.config(state="normal")
                 self.preview_text.delete(1.0, tk.END)
@@ -605,7 +630,7 @@ class TestoMaestroGUI:
             self.show_error(f"Errore nel caricamento del file:\n{e}")
 
     def show_preview(self, df):
-        preview = df.head(10).to_string(index=False)
+        preview = df.head(self.preview_rows).to_string(index=False)
         self.preview_text.config(state="normal")
         self.preview_text.delete(1.0, tk.END)
         self.preview_text.insert(tk.END, preview)
@@ -634,11 +659,11 @@ class TestoMaestroGUI:
                     if col and val and col in df.columns:
                         df = df[df[col].astype(str) == str(val)]
                 
-                preview = df.head(10).to_string(index=False)
+                preview = df.head(self.preview_rows).to_string(index=False)
 
             else:  # file fisso
                 with open(path, "r", encoding="utf-8") as f:
-                    lines = [f.readline().rstrip("\n") for _ in range(10)]
+                    lines = [f.readline().rstrip("\n") for _ in range(self.preview_rows)]
 
                 # --- controlli filtri ---
                 errors = self.check_fixed_filter_rows(lines)
@@ -951,6 +976,28 @@ class TestoMaestroGUI:
             self.lbl_file_info.config(
                 text="Dimensione: - ; Estensione: - ; Lunghezza righe: - ; Righe totali: -"
             )
+
+    def update_preview_rows(self):
+        try:
+            val = int(self.preview_rows_var.get())
+            # Limita al massimo definito
+            if val > PREVIEW_ROWS_MAX:
+                val = PREVIEW_ROWS_MAX
+                self.preview_rows_var.set(val)
+            self.preview_rows = val
+
+            # Aggiorna la label dinamica
+            self.spin_label.config(text=f"Anteprima (prime {self.preview_rows} righe):")
+
+            # Aggiorna l'anteprima se già caricato un file
+            if self.file_path.get() and os.path.isfile(self.file_path.get()):
+                self.load_file()
+
+        except ValueError:
+            # se non è un numero valido, resetta al default
+            self.preview_rows_var.set(PREVIEW_ROWS_DEFAULT)
+            self.preview_rows = PREVIEW_ROWS_DEFAULT
+            self.spin_label.config(text=f"Anteprima (prime {self.preview_rows} righe):")
 
 if __name__ == "__main__":
     root = TkinterDnD.Tk()

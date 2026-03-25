@@ -34,6 +34,7 @@ TestoMaestro è pensato per chi ha bisogno di manipolare file di testo complessi
 
 ### 4. Anteprima
 - Visualizzazione delle prime **n righe** prima e dopo le trasformazioni
+- Possibilità di scegliere il numero di righe da visualizzare
 - Evidenza delle colonne selezionate (Da e A) per agevolare l'impostazione dei filtri e degli ordinamenti
 - Evidenziazione delle colonne interessate dai filtri e dagli ordinamenti
 
@@ -67,10 +68,13 @@ TestoMaestro/
 
 ## Note future / TODO
 
+- Aggiungere numero record a fianco della singola riga
+- Aggiungere totale righe mostrate (significativo, ad esempio, se imposto limite > a totale record del file)
+- Aggiungere, oltre a punto precedente, totale righe filtrate rispetto a totale estratto in anteprima (risultato, ad esempio, 10 righe su 50 totali)
+- Colori più vivaci
 - Opzione (default = no) di poter sovrascrivere il file di input con il file prodotto
 - Gestione alert se file caricato > <parametro soglia MB>
 - Possibilità di scegliere le righe da estrarre: prime "n" righe o righe dalla "n" alla "n" o multiple scelte (scegliere se applicare queste condizioni sul di input o sul file di output; considerare se questa estrazione è compatibile con i filtri e gli ordinamenti applicati dall'utente)
-- Scelta di poter caricare in anteprima più di 10 (default)
 - Salvataggio in memoria cartella da dove prendere i file (directory preferita)
 - Salvataggio impostazioni personali (filtri e/o ordinamenti)
 - Utilizzo "cython" cone compilatore "python vs c" per migliorare prestazioni
